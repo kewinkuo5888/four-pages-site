@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<title>可編輯四頁網頁（可上傳圖片）</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+    body {
+        font-family: "Microsoft JhengHei", sans-serif;
+        margin: 0;
+        background: #f4f4f4;
+    }
+    header {
+        background: #1f2937;
+        color: white;
+        padding: 16px;
+    }
+    .container {
+        max-width: 1000px;
+        margin: 20px auto;
+        background: white;
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    .tab-nav {
+        display: flex;
+        border-bottom: 1px solid #ddd;
+    }
+    .tab-nav button {
+        flex: 1;
+        padding: 12px;
+        border: none;
+        cursor: pointer;
+        background: #eee;
+        transition: 0.2s;
+        font-size: 15px;
+        font-weight: bold;
+    }
+    .tab-nav button.active {
+        background: #2563eb;
+        color: white;
+    }
+    .tab-content {
+        display: none;
+        padding: 20px 10px;
+    }
+    .tab-content.active {
+        display: block;
+    }
+    textarea {
+        width: 100%;
+        height: 120px;
+        padding: 10px;
+        resize: vertical;
+        margin-top: 10px;
+    }
+    img.uploaded {
+        max-width: 100%;
+        margin-top: 10px;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+    }
+</style>
+</head>
+
+<body>
+<header>
+    <h2>可編輯四頁網頁（可上傳圖片）</h2>
+    <p>可直接修改頁名、貼內容、顯示圖片，完成後可部署 GitHub / Vercel</p>
+</header>
+
+<div class="container">
+
+    <!-- 動態頁籤按鈕 -->
+    <div class="tab-nav" id="tabNav">
+        <button class="active" data-tab="1">頁面一</button>
+        <button data-tab="2">頁面二</button>
+        <button data-tab="3">頁面三</button>
+        <button data-tab="4">頁面四</button>
+    </div>
+
+    <!-- 四個可編輯區 -->
+    <div id="tabContent1" class="tab-content active">
+        <h3>頁面名稱：<input type="text" id="title1" value="頁面一" oninput="updateTab(1)"></h3>
+
+        <label>輸入文字內容：</label>
+        <textarea id="text1"></textarea>
+
+        <label>上傳圖片：</label>
+        <input type="file" accept="image/*" onchange="uploadImage(event,1)">
+        <img id="img1" class="uploaded">
+    </div>
+
+    <div id="tabContent2" class="tab-content">
+        <h3>頁面名稱：<input type="text" id="title2" value="頁面二" oninput="updateTab(2)"></h3>
+
+        <label>輸入文字內容：</label>
+        <textarea id="text2"></textarea>
+
+        <label>上傳圖片：</label>
+        <input type="file" accept="image/*" onchange="uploadImage(event,2)">
+        <img id="img2" class="uploaded">
+    </div>
+
+    <div id="tabContent3" class="tab-content">
+        <h3>頁面名稱：<input type="text" id="title3" value="頁面三" oninput="updateTab(3)"></h3>
+
+        <label>輸入文字內容：</label>
+        <textarea id="text3"></textarea>
+
+        <label>上傳圖片：</label>
+        <input type="file" accept="image/*" onchange="uploadImage(event,3)">
+        <img id="img3" class="uploaded">
+    </div>
+
+    <div id="tabContent4" class="tab-content">
+        <h3>頁面名稱：<input type="text" id="title4" value="頁面四" oninput="updateTab(4)"></h3>
+
+        <label>輸入文字內容：</label>
+        <textarea id="text4"></textarea>
+
+        <label>上傳圖片：</label>
+        <input type="file" accept="image/*" onchange="uploadImage(event,4)">
+        <img id="img4" class="uploaded">
+    </div>
+
+</div>
+
+<script>
+// ── 1. 切換頁籤 ───────────────────────────
+document.querySelectorAll(".tab-nav button").forEach(btn => {
+    btn.addEventListener("click", () => {
+        document.querySelectorAll(".tab-nav button").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+
+        let tab = btn.dataset.tab;
+        document.querySelectorAll(".tab-content").forEach(c => c.classList.remove("active"));
+        document.getElementById("tabContent" + tab).classList.add("active");
+    });
+});
+
+// ── 2. 更新頁籤名稱 ───────────────────────────
+function updateTab(page) {
+    let newTitle = document.getElementById("title" + page).value;
+    let tabs = document.querySelectorAll(".tab-nav button");
+    tabs[page - 1].textContent = newTitle;
+}
+
+// ── 3. 顯示上傳圖片 ───────────────────────────
+function uploadImage(event, page) {
+    let img = document.getElementById("img" + page);
+    let file = event.target.files[0];
+    let reader = new FileReader();
+
+    reader.onload = () => {
+        img.src = reader.result;
+    };
+
+    if (file) reader.readAsDataURL(file);
+}
+</script>
+
+</body>
+</html>
